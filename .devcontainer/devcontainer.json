@@ -2,11 +2,11 @@
   "name": "n8n-codespaces",
   "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
 
-  "features": {
-    "ghcr.io/devcontainers/features/node:1": {
-      "version": "20"
-    }
-  },
+  // 不用 feature（因為會壞）
+  "features": {},
+
+  // 手動裝 Node.js 20（穩）
+  "postCreateCommand": "curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && apt-get install -y nodejs && npm install n8n",
 
   "forwardPorts": [5678],
   "portsAttributes": {
@@ -17,7 +17,6 @@
     }
   },
 
-  "postCreateCommand": "npm install -g pm2 && npm install n8n",
-
-  "postStartCommand": "pm2 start node_modules/n8n/bin/n8n -- start --tunnel; pm2 save"
+  // 不用 tunnel、避免 crash
+  "postStartCommand": "npx n8n start"
 }
