@@ -1,11 +1,15 @@
 {
   "name": "n8n-codespaces",
   "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+
+  "remoteUser": "vscode",
+
   "features": {
     "ghcr.io/devcontainers/features/node:1": {
-      "version": "lts"
+      "version": "18"
     }
   },
+
   "forwardPorts": [5678],
   "portsAttributes": {
     "5678": {
@@ -14,5 +18,15 @@
       "visibility": "public"
     }
   },
-  "postStartCommand": "npx --yes n8n@latest start"
+
+  // 在 codespaces 裡持久化 n8n 資料
+  "mounts": [
+    "source=n8n-data,target=/home/vscode/.n8n,type=volume"
+  ],
+
+  // 建立完環境後跑一次（安裝 n8n + pm2）
+  "postCreateCommand": "npm install -g n8n pm2",
+
+  // 每次 codespace 啟動自動跑 n8n
+  "postStartCommand": "pm2 start n8n --no-daemon -- start"
 }
