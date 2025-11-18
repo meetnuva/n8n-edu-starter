@@ -1,13 +1,8 @@
 {
-  "name": "n8n-codespaces",
-  "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
-
-  // 不用 feature（因為會壞）
-  "features": {},
-
-  // 手動裝 Node.js 20（穩）
-  "postCreateCommand": "curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && apt-get install -y nodejs && npm install n8n",
-
+  "name": "n8n-edu-starter",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
   "forwardPorts": [5678],
   "portsAttributes": {
     "5678": {
@@ -16,7 +11,5 @@
       "visibility": "public"
     }
   },
-
-  // 不用 tunnel、避免 crash
-  "postStartCommand": "npx n8n start"
+  "postStartCommand": "n8n start --tunnel"
 }
