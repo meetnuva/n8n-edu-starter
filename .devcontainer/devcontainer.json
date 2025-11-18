@@ -2,47 +2,22 @@
   "name": "n8n-codespaces",
   "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
 
-  // ------------------------------------------------
-  // Install Node.js 20 (n8n 官方目前完全支援)
-  // ------------------------------------------------
   "features": {
     "ghcr.io/devcontainers/features/node:1": {
       "version": "20"
     }
   },
 
-  // ------------------------------------------------
-  // Expose n8n default port 5678
-  // ------------------------------------------------
   "forwardPorts": [5678],
   "portsAttributes": {
     "5678": {
-      "label": "n8n Editor UI",
+      "label": "n8n",
       "onAutoForward": "openPreview",
       "visibility": "public"
     }
   },
 
-  // ------------------------------------------------
-  // Set n8n folder to be persistent in workspace
-  // ------------------------------------------------
-  "containerEnv": {
-    "N8N_USER_FOLDER": "/workspaces/${localWorkspaceFolderBasename}/.n8n",
-    "N8N_TUNNEL_SUBDOMAIN": "n8n-${localWorkspaceFolderBasename}"
-  },
+  "postCreateCommand": "npm install -g pm2 && npm install n8n",
 
-  // ------------------------------------------------
-  // Install n8n locally (no sudo, no global, no conflicts)
-  // ------------------------------------------------
-  "postCreateCommand": "npm install n8n",
-
-  // ------------------------------------------------
-  // Start n8n with secure HTTPS tunnel
-  // ------------------------------------------------
-  "postStartCommand": "npx n8n start --tunnel --port 5678",
-
-  // ------------------------------------------------
-  // Optional: run in non-root user mode (recommended)
-  // ------------------------------------------------
-  "remoteUser": "vscode"
+  "postStartCommand": "pm2 start node_modules/n8n/bin/n8n -- start --tunnel; pm2 save"
 }
