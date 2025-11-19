@@ -1,8 +1,13 @@
 {
-  "name": "n8n-edu-starter",
-  "build": {
-    "dockerfile": "Dockerfile"
+  "name": "n8n-codespaces",
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "20"
+    }
   },
+
   "forwardPorts": [5678],
   "portsAttributes": {
     "5678": {
@@ -11,5 +16,8 @@
       "visibility": "public"
     }
   },
-  "postStartCommand": "n8n start --tunnel"
+
+  "postCreateCommand": "npm install -g pm2 && npm install n8n",
+
+  "postStartCommand": "pm2 start node_modules/n8n/bin/n8n -- start --tunnel; pm2 save"
 }
